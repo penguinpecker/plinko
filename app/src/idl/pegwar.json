@@ -1,0 +1,2407 @@
+{
+  "address": "Hh2cvEwnqDV995Fkp4yaagjTnrVvmsy7TybiKoJTQNin",
+  "metadata": {
+    "name": "pegwar",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Peg War: multiplayer Plinko on MagicBlock's private rollup"
+  },
+  "instructions": [
+    {
+      "name": "abort",
+      "docs": [
+        "The dice never came: end the round with no points so everyone can be refunded."
+      ],
+      "discriminator": [
+        73,
+        205,
+        102,
+        177,
+        241,
+        200,
+        145,
+        80
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "arm",
+      "docs": [
+        "Hand the ticking to the rollup itself: schedule `tick` every 250 ms with MagicBlock's",
+        "crank, signed by the Board PDA. Anyone can call it once the board is LIVE; clients keep a",
+        "heartbeat as a fallback, and `advance` makes extra ticks harmless."
+      ],
+      "discriminator": [
+        230,
+        51,
+        249,
+        116,
+        166,
+        65,
+        21,
+        70
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "cancel",
+      "docs": [
+        "Host calls it off before the round starts: everyone gets their buy-in back.",
+        "Pass every player's wallet as remaining accounts, in join order."
+      ],
+      "discriminator": [
+        232,
+        219,
+        223,
+        41,
+        219,
+        236,
+        220,
+        190
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "host",
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim",
+      "docs": [
+        "Pay one player their share of the pot: pot x their points / everyone's points.",
+        "Anyone can call it for anyone; the money only ever goes to that player.",
+        "A round with no points (the dice never came) refunds each buy-in."
+      ],
+      "discriminator": [
+        62,
+        198,
+        214,
+        193,
+        213,
+        159,
+        108,
+        210
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "to",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "player",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "close_chat",
+      "docs": [
+        "Round over: close the chat so its rent goes back to the Board before it leaves the rollup."
+      ],
+      "discriminator": [
+        182,
+        227,
+        125,
+        158,
+        213,
+        132,
+        147,
+        192
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "chat",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "address": "MagicVau1t999999999999999999999999999999999"
+        },
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_round",
+      "docs": [
+        "Open a round. The host pre-funds the rent the Board and Seed need for their",
+        "read permissions on the private rollup, so nobody needs lamports there.",
+        "`price` is each player's per-ball deposit in lamports. With `usd_cents` > 0 the ball's",
+        "real cost is locked in dollars from MagicBlock's price feed when the round starts",
+        "(capped at `price`), and the unspent deposit is refunded at payout."
+      ],
+      "discriminator": [
+        229,
+        218,
+        236,
+        169,
+        231,
+        80,
+        134,
+        112
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "trophy_fund",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  111,
+                  112,
+                  104,
+                  121,
+                  95,
+                  102,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "host",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "u64"
+        },
+        {
+          "name": "price",
+          "type": "u64"
+        },
+        {
+          "name": "usd_cents",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "delegate_pda",
+      "docs": [
+        "Hand the Board or Seed PDA to the private rollup. With `seal`, a delegation action runs",
+        "`init_permission` inside the rollup the moment the account lands: the Board opens to",
+        "everyone and the Seed is sealed from its very first slot there, with no extra transaction."
+      ],
+      "discriminator": [
+        248,
+        217,
+        193,
+        46,
+        124,
+        191,
+        64,
+        135
+      ],
+      "accounts": [
+        {
+          "name": "buffer_pda",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  102,
+                  102,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pda"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                247,
+                252,
+                13,
+                217,
+                202,
+                193,
+                99,
+                110,
+                93,
+                185,
+                150,
+                111,
+                204,
+                152,
+                159,
+                77,
+                224,
+                163,
+                116,
+                33,
+                7,
+                62,
+                164,
+                203,
+                206,
+                55,
+                95,
+                240,
+                141,
+                211,
+                99,
+                195
+              ]
+            }
+          }
+        },
+        {
+          "name": "delegation_record_pda",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pda"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "delegation_program"
+            }
+          }
+        },
+        {
+          "name": "delegation_metadata_pda",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  105,
+                  111,
+                  110,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pda"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "delegation_program"
+            }
+          }
+        },
+        {
+          "name": "pda",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "signer": true
+        },
+        {
+          "name": "owner_program",
+          "address": "Hh2cvEwnqDV995Fkp4yaagjTnrVvmsy7TybiKoJTQNin"
+        },
+        {
+          "name": "delegation_program",
+          "address": "DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "account",
+          "type": {
+            "defined": {
+              "name": "AccountType"
+            }
+          }
+        },
+        {
+          "name": "seal",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "drop_ball",
+      "docs": [
+        "Drop your next ball (it leaves at the next tick your release gap allows)."
+      ],
+      "discriminator": [
+        240,
+        13,
+        138,
+        150,
+        133,
+        40,
+        169,
+        197
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "docs": [
+            "The seated wallet itself, or a session key it approved."
+          ],
+          "signer": true
+        },
+        {
+          "name": "player"
+        },
+        {
+          "name": "session_token",
+          "optional": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "faucet",
+      "docs": [
+        "Devnet faucet: 100 test-USDC to the caller's token account."
+      ],
+      "discriminator": [
+        0,
+        98,
+        59,
+        30,
+        144,
+        142,
+        113,
+        12
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "writable": true,
+          "address": "FmZj181DPGvcRejrW9TQVxMxTTMneGjKb2t39cys9Zc4"
+        },
+        {
+          "name": "mint_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "to",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "finish",
+      "docs": [
+        "Every ball has landed: reveal the seed on the public Board, hand both accounts back to",
+        "Solana, and pay everyone in the same Solana transaction with a Magic Action. The Board",
+        "pays for its own commit, so anyone can send this and no wallet has to sign for the money."
+      ],
+      "discriminator": [
+        67,
+        74,
+        170,
+        132,
+        125,
+        233,
+        182,
+        37
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "magic_fee_vault",
+          "writable": true
+        },
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        },
+        {
+          "name": "magic_context",
+          "writable": true,
+          "address": "MagicContext1111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "finish_manual",
+      "docs": [
+        "Fallback finish if the Magic Action path ever fails: same reveal and commit, paid for by",
+        "the caller's wallet, then anyone runs `claim` on Solana."
+      ],
+      "discriminator": [
+        63,
+        190,
+        132,
+        124,
+        56,
+        215,
+        109,
+        77
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        },
+        {
+          "name": "magic_context",
+          "writable": true,
+          "address": "MagicContext1111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_permission",
+      "docs": [
+        "Create the read permission for a delegated PDA, paid from its own pre-funded rent.",
+        "The Board is public (`None`); the Seed is private with no readers at all (`Some([])`).",
+        "Runs as the delegation action above, or from a client as a fallback (it's idempotent)."
+      ],
+      "discriminator": [
+        66,
+        14,
+        153,
+        250,
+        187,
+        36,
+        179,
+        236
+      ],
+      "accounts": [
+        {
+          "name": "permissioned_account",
+          "writable": true
+        },
+        {
+          "name": "permission",
+          "writable": true
+        },
+        {
+          "name": "permission_program",
+          "address": "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1"
+        },
+        {
+          "name": "ephemeral_vault",
+          "writable": true,
+          "address": "MagicVau1t999999999999999999999999999999999"
+        },
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "account",
+          "type": {
+            "defined": {
+              "name": "AccountType"
+            }
+          }
+        },
+        {
+          "name": "members",
+          "type": {
+            "option": {
+              "vec": {
+                "defined": {
+                  "name": "Member"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "join",
+      "docs": [
+        "Buy in: `price` per ball for 1..=BALLS balls, straight into a vault that never leaves Solana."
+      ],
+      "discriminator": [
+        206,
+        55,
+        2,
+        106,
+        113,
+        220,
+        17,
+        163
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "player",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_id",
+          "type": "u64"
+        },
+        {
+          "name": "balls",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "open_chat",
+      "docs": [
+        "Open the round's trash-talk log: an Ephemeral Account that lives only on the rollup and",
+        "is never written to Solana. Its rent comes out of the delegated Board."
+      ],
+      "discriminator": [
+        194,
+        128,
+        196,
+        128,
+        42,
+        205,
+        213,
+        242
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "chat",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "address": "MagicVau1t999999999999999999999999999999999"
+        },
+        {
+          "name": "magic_program",
+          "address": "Magic11111111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "payout",
+      "docs": [
+        "Runs on Solana as the Magic Action scheduled by `finish`, right after the round is back.",
+        "Accounts are found by address, not position, and it can't fail on money edge cases:",
+        "a failing action would roll back the whole commit."
+      ],
+      "discriminator": [
+        149,
+        140,
+        194,
+        236,
+        174,
+        189,
+        6,
+        239
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "place_bet",
+      "docs": [
+        "Spectators back a player with test-USDC, gasless on the rollup, until the dice are rolled.",
+        "The stake moves from the bettor's rollup token account into the Board's Magic ATA."
+      ],
+      "discriminator": [
+        222,
+        62,
+        67,
+        220,
+        63,
+        166,
+        126,
+        33
+      ],
+      "accounts": [
+        {
+          "name": "bettor",
+          "signer": true
+        },
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "from",
+          "writable": true
+        },
+        {
+          "name": "pot",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "pick",
+          "type": "u8"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "place_bumper",
+      "docs": [
+        "Put one of your 3 bumpers on a peg: the first rival ball to hit it gets knocked your way."
+      ],
+      "discriminator": [
+        150,
+        72,
+        165,
+        124,
+        91,
+        129,
+        204,
+        139
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "docs": [
+            "The seated wallet itself, or a session key it approved."
+          ],
+          "signer": true
+        },
+        {
+          "name": "player"
+        },
+        {
+          "name": "session_token",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "row",
+          "type": "u8"
+        },
+        {
+          "name": "peg",
+          "type": "u8"
+        },
+        {
+          "name": "dir",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "process_undelegation",
+      "discriminator": [
+        196,
+        28,
+        41,
+        206,
+        48,
+        37,
+        51,
+        167
+      ],
+      "accounts": [
+        {
+          "name": "base_account",
+          "writable": true
+        },
+        {
+          "name": "buffer",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  110,
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  101,
+                  45,
+                  98,
+                  117,
+                  102,
+                  102,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "base_account"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                181,
+                183,
+                0,
+                225,
+                242,
+                87,
+                58,
+                192,
+                204,
+                6,
+                34,
+                1,
+                52,
+                74,
+                207,
+                151,
+                184,
+                53,
+                6,
+                235,
+                140,
+                229,
+                25,
+                152,
+                204,
+                98,
+                126,
+                24,
+                147,
+                128,
+                167,
+                62
+              ]
+            }
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "account_seeds",
+          "type": {
+            "vec": "bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "say",
+      "docs": [
+        "Say something. Players post under their seat colour, spectators as seat 255.",
+        "The Board is read-only here so chat never blocks a tick."
+      ],
+      "discriminator": [
+        201,
+        44,
+        240,
+        142,
+        167,
+        188,
+        108,
+        87
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "player"
+        },
+        {
+          "name": "session_token",
+          "optional": true
+        },
+        {
+          "name": "board",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "chat",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "text",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "seed_board",
+      "docs": [
+        "The VRF oracle's answer, sealed into the private Seed account. Every bounce of every",
+        "ball comes from it, and nobody can read it until the round is over."
+      ],
+      "discriminator": [
+        255,
+        37,
+        0,
+        12,
+        200,
+        149,
+        22,
+        246
+      ],
+      "accounts": [
+        {
+          "name": "vrf_program_identity",
+          "docs": [
+            "Scoped VRF identity PDA, bound to this program. Its presence as a signer proves",
+            "the callback was issued by the VRF program for this program."
+          ],
+          "signer": true
+        },
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "randomness",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "settle_bets",
+      "docs": [
+        "Round over: winning bets split the whole pool by stake; if nobody backed the winner,",
+        "everyone gets their stake back. The Board signs for its Magic ATA. Pass every bettor's",
+        "token account as remaining accounts, in bet order."
+      ],
+      "discriminator": [
+        230,
+        236,
+        14,
+        198,
+        123,
+        178,
+        98,
+        220
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pot",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "start",
+      "docs": [
+        "Lock the lobby and roll the fair dice. Only the host, once the round is on the rollup."
+      ],
+      "discriminator": [
+        62,
+        15,
+        117,
+        236,
+        47,
+        1,
+        89,
+        139
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "docs": [
+            "The host's wallet, or the session key it approved; also pays for the dice (free on the rollup)."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "player"
+        },
+        {
+          "name": "session_token",
+          "optional": true
+        },
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "price_feed",
+          "address": "ENYwebBThHzmzwPLAQvCucUTsjyfBSZdD9ViXksS4jPu"
+        },
+        {
+          "name": "oracle_queue",
+          "writable": true
+        },
+        {
+          "name": "program_identity",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  100,
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "vrf_program",
+          "address": "Vrf1RNUjXmQGjmQrQLvJHs9SNkvDJEsRVFPkfSQUwGz"
+        },
+        {
+          "name": "slot_hashes",
+          "address": "SysvarS1otHashes111111111111111111111111111"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "client_seed",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "tick",
+      "docs": [
+        "Move the board up to now. Anyone can call it: clients heartbeat it, the crank schedules it."
+      ],
+      "discriminator": [
+        92,
+        79,
+        44,
+        8,
+        101,
+        80,
+        63,
+        15
+      ],
+      "accounts": [
+        {
+          "name": "board",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  97,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "board.id",
+                "account": "Board"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Board",
+      "discriminator": [
+        79,
+        48,
+        160,
+        63,
+        153,
+        132,
+        240,
+        56
+      ]
+    },
+    {
+      "name": "Chat",
+      "discriminator": [
+        170,
+        4,
+        71,
+        128,
+        185,
+        103,
+        250,
+        177
+      ]
+    },
+    {
+      "name": "Seed",
+      "discriminator": [
+        227,
+        135,
+        95,
+        221,
+        241,
+        179,
+        237,
+        142
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "RoundFull",
+      "msg": "This round is full."
+    },
+    {
+      "code": 6001,
+      "name": "AlreadyJoined",
+      "msg": "You're already in this round."
+    },
+    {
+      "code": 6002,
+      "name": "NotHost",
+      "msg": "Only the host can do that."
+    },
+    {
+      "code": 6003,
+      "name": "WrongAccount",
+      "msg": "Wrong account for this round."
+    },
+    {
+      "code": 6004,
+      "name": "WrongPhase",
+      "msg": "Not allowed in this phase of the round."
+    },
+    {
+      "code": 6005,
+      "name": "NoBalls",
+      "msg": "You have no balls left to drop."
+    },
+    {
+      "code": 6006,
+      "name": "BadBumper",
+      "msg": "That peg can't take a bumper, or you have none left."
+    },
+    {
+      "code": 6007,
+      "name": "NotOver",
+      "msg": "The round isn't over."
+    },
+    {
+      "code": 6008,
+      "name": "AlreadyPaid",
+      "msg": "Already paid out."
+    },
+    {
+      "code": 6009,
+      "name": "TooEarly",
+      "msg": "Too early to abort; the dice may still land."
+    },
+    {
+      "code": 6010,
+      "name": "BadMessage",
+      "msg": "Messages are 1 to 48 bytes."
+    },
+    {
+      "code": 6011,
+      "name": "BadPrice",
+      "msg": "The SOL/USD price feed is missing or stale."
+    },
+    {
+      "code": 6012,
+      "name": "NotYourSeat",
+      "msg": "That wallet didn't sign, and there's no live session key for it."
+    },
+    {
+      "code": 6013,
+      "name": "BetsClosed",
+      "msg": "Bets close when the dice are rolled."
+    },
+    {
+      "code": 6014,
+      "name": "BadBet",
+      "msg": "Pick a seated player, bet more than zero; 12 bets per round."
+    },
+    {
+      "code": 6015,
+      "name": "BadBalls",
+      "msg": "Pick 1 to 5 balls."
+    }
+  ],
+  "types": [
+    {
+      "name": "AccountType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Board",
+            "fields": [
+              {
+                "name": "id",
+                "type": "u64"
+              }
+            ]
+          },
+          {
+            "name": "Seed",
+            "fields": [
+              {
+                "name": "id",
+                "type": "u64"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Ball",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "u8"
+          },
+          {
+            "name": "state",
+            "type": "u8"
+          },
+          {
+            "name": "row",
+            "type": "u8"
+          },
+          {
+            "name": "pos",
+            "type": "u8"
+          },
+          {
+            "name": "released",
+            "type": "u32"
+          },
+          {
+            "name": "golden",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Bet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bettor",
+            "type": "pubkey"
+          },
+          {
+            "name": "pick",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Board",
+      "docs": [
+        "Public: everyone watches this live on the rollup."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "host",
+            "type": "pubkey"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "usd_cents",
+            "type": "u16"
+          },
+          {
+            "name": "ball_cost",
+            "type": "u64"
+          },
+          {
+            "name": "pot",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "paid",
+            "type": "u8"
+          },
+          {
+            "name": "players_len",
+            "type": "u8"
+          },
+          {
+            "name": "players",
+            "type": {
+              "array": [
+                "pubkey",
+                8
+              ]
+            }
+          },
+          {
+            "name": "scores",
+            "type": {
+              "array": [
+                "u32",
+                8
+              ]
+            }
+          },
+          {
+            "name": "next_release",
+            "type": {
+              "array": [
+                "u32",
+                8
+              ]
+            }
+          },
+          {
+            "name": "balls",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "Ball"
+                  }
+                },
+                40
+              ]
+            }
+          },
+          {
+            "name": "bumpers",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "Bumper"
+                  }
+                },
+                24
+              ]
+            }
+          },
+          {
+            "name": "tick",
+            "type": "u32"
+          },
+          {
+            "name": "landed",
+            "type": "u8"
+          },
+          {
+            "name": "start_slot",
+            "type": "u64"
+          },
+          {
+            "name": "armed",
+            "type": "bool"
+          },
+          {
+            "name": "trophy",
+            "type": "u8"
+          },
+          {
+            "name": "bets",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "Bet"
+                  }
+                },
+                12
+              ]
+            }
+          },
+          {
+            "name": "bets_len",
+            "type": "u8"
+          },
+          {
+            "name": "bet_total",
+            "type": "u64"
+          },
+          {
+            "name": "bets_paid",
+            "type": "bool"
+          },
+          {
+            "name": "golden",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "seed",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Bumper",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "u8"
+          },
+          {
+            "name": "row",
+            "type": "u8"
+          },
+          {
+            "name": "peg",
+            "type": "u8"
+          },
+          {
+            "name": "dir",
+            "type": "u8"
+          },
+          {
+            "name": "active",
+            "type": "u32"
+          },
+          {
+            "name": "hit",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Chat",
+      "docs": [
+        "Rollup-only ring buffer of the last CHAT_SLOTS messages."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "head",
+            "type": "u8"
+          },
+          {
+            "name": "msgs",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "Msg"
+                  }
+                },
+                24
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Member",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "flags",
+            "type": "u8"
+          },
+          {
+            "name": "pubkey",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Msg",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "seat",
+            "type": "u8"
+          },
+          {
+            "name": "len",
+            "type": "u8"
+          },
+          {
+            "name": "text",
+            "type": {
+              "array": [
+                "u8",
+                48
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Seed",
+      "docs": [
+        "Private: nobody can read it on the rollup. Revealed when the round ends."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "seed",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "paths",
+            "type": {
+              "array": [
+                "u16",
+                40
+              ]
+            }
+          },
+          {
+            "name": "golden",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
